@@ -6,11 +6,23 @@
   <div class="card-columns mx-2">
     <% @array_gossip.each do |gossip| %>
     <% @id = Gossip.where(title: "#{gossip.title}").ids%>
-    <div class="card border-primary mb-2 bg-light">
-      <div class="card-body">
-        <h5 class="card-title"> <%= gossip.user.first_name%></h5>
-        <h4 class="card-text"> <%= link_to "#{gossip.title}", gossip_path(@id)%></h4>
+      <div class="card border-primary mb-2 bg-light">
+          <div class="card-body">
+              <h5 class="card-title"> <%= gossip.user.first_name%></h5>
+              <h4 class="card-text"> <%= link_to "#{gossip.title}", gossip_path(@id)%></h4>
+
+            <%= button_to url_for(:controller => "likes", :action => "create"), method: 'post' do %>
+
+              <input id="gossip" name="gossip" type="hidden" value="<%= gossip.id %>" />
+                <a>Like</a>
+            <% end %>
+
+            <h6 class="card-text"> <%= Like.where(gossip_id: @id).count %> Like</h6>
+
+        </div>
       </div>
-    </div>
-  <% end %>
+     <% end %>
   </div>
+
+
+

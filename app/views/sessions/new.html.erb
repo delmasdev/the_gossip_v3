@@ -1,0 +1,36 @@
+<html>
+  <body>
+
+  <div class="container">
+      <div class="row">
+        <div class="col">
+        <% flash.each do |type, msg| %>
+  <div class="alert alert-info">
+    <%= msg %>
+    ecrire message
+  </div>
+<% end %>
+      </div>
+      </div>
+    </div>
+
+
+  <%= form_tag url_for(action: 'create'), method: "post" do %>
+
+
+  <%= label_tag 'email' %>
+  <%= text_field_tag 'email'%>
+  <br /> <br />
+
+  <%= label_tag 'password' %>
+  <%= text_area_tag 'password'%>
+  <br /> <br />
+
+
+  <%= submit_tag "Create Session" %>
+<% end %>
+
+
+
+  </body>
+</html>

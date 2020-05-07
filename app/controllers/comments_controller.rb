@@ -3,12 +3,13 @@ class CommentsController < ApplicationController
   def create
     @comment = Comment.new(gossip_id: params[:gossip],
                           content: params[:content],
-                          user: User.find(params[:user]))
+                          'user_id' => session[:user_id])
     if @comment.save
-      flash.now[:success] = ""
+      flash[:success] = "yes"
       redirect_to gossip_path(@comment.gossip.id)
     else
-     render :edit
+      flash[:error] = "no"
+     redirect_to gossip_path(@comment.gossip.id)
    end
   end
 
@@ -22,7 +23,7 @@ class CommentsController < ApplicationController
     post_params = params.require(:comment).permit(:content)
 
     if @comment.update(post_params)
-      flash.now[:success] = ""
+      flash[:success] = ""
       redirect_to gossip_path(@comment.gossip.id)
     else
      render :edit

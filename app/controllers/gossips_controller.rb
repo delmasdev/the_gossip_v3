@@ -1,8 +1,10 @@
 class GossipsController < ApplicationController
 
+  before_action :authenticate_user, only: [:create, :new]
+
+
   def index
     @array_gossip = Gossip.all
-
   end
 
   def show
@@ -16,12 +18,12 @@ class GossipsController < ApplicationController
   end
 
   def create
-    @gossip = Gossip.new( user_id: rand(1..10),
+    @gossip = Gossip.new( 'user_id' => session[:user_id],
                         'title' => params[:title],
                         'content' => params[:content])
     if @gossip.save
       @array_gossip = Gossip.all
-      flash.now[:success] = ""
+      flash[:success] = ""
       render 'gossips/index.html.erb'
     else
       render 'gossips/new.html.erb'
@@ -38,7 +40,7 @@ class GossipsController < ApplicationController
     post_params = params.require(:gossip).permit(:title, :content)
 
     if @array_gossip.update(post_params)
-      flash.now[:success] = ""
+      flash[:success] = ""
       render :show
     else
      render :edit
@@ -53,7 +55,13 @@ class GossipsController < ApplicationController
 
   end
 
+  private
 
-
+  def authenticate_user
+    unless current_user
+      flash[:danger] = "Please log in."
+      redirect_to new_session_path
+    end
+  end
 
 end

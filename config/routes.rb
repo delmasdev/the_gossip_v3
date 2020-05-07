@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   resources :gossips
   resources :comments
   resources :users
+  resources :sessions, only: [:new, :create, :destroy]
+  resources :likes
 
   # get '/gossips', to: 'gossips#index'
   # get '/gossips/new', to: 'gossips#new'

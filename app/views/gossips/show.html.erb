@@ -3,18 +3,42 @@
     <h1>Gossips#show</h1>
 <p>Find me in app/views/gossips/show.html.erb</p>
 <center>
-  <div class="container">
+
+
+<div class="container">
       <div class="row">
         <div class="col">
-        <% flash.each do |type, msg| %>
+<% [:error].each do |key| %>
+
+  <% if flash[:error] %>
   <div class="alert alert-info">
-    <%= msg %>
-    edité
+  <div class="<%= key %>" id="flash">
+    commentaire refusé
+    <%= flash[:error] %>
   </div>
+  <% end %>
 <% end %>
-      </div>
+</div>
       </div>
     </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col">
+<% [:success].each do |key| %>
+
+  <% if flash[:success] %>
+  <div class="alert alert-info">
+  <div class="<%= key %>" id="flash">
+    potin édité
+    <%= flash[:success] %>
+  </div>
+  <% end %>
+<% end %>
+</div>
+      </div>
+    </div>
+
 
 <br>
 <h1>Page du Gossip de <%="#{@array_gossip.user.first_name}"%></h1>
@@ -31,9 +55,13 @@
 
 <p>
 
+  <% if current_user == @array_gossip.user %>
   <a href="<%= edit_gossip_path %>" class="btn btn-primary">Edit</a>
 
    <a href="<%= gossip_path %>" class="btn btn-danger" data-method="DELETE">Delete</a>
+
+
+   <% end %>
 
 
 <p>
@@ -47,14 +75,11 @@
 <% end %>
 
 
-
+<% if current_user != nil %>
 <%= form_tag url_for(:controller => "comments", :action => "create"), method: 'post' do %>
 
 <input id="gossip" name="gossip" type="hidden" value="<%=@array_gossip.id%>" />
 
-  <%= label_tag 'Confirme ton profil'%>
-        <%= select_tag 'user', options_from_collection_for_select(User.all, :id, :first_name), {class: 'form-control', prompt: 'Choisir un utilisateur'} %>
-      <br /> <br />
   <br /> <br />
 
   <%= label_tag 'Content' %>
@@ -63,6 +88,15 @@
 
   <%= submit_tag "Create Gossip" %>
   <% end %>
+  <%= button_to url_for(:controller => "likes", :action => "create"), method: 'post' do %>
+  <input id="gossip" name="gossip" type="hidden" value="<%=@array_gossip.id%>" />
+              <a>Like</a>
+          <% end %>
+              <h6 class="card-text"> <%= Like.where(gossip_id: @array_gossip.id).count %> Like</h6>
+            </div>
+          </div>
+
+<% end %>
 
 </center>
 

@@ -14,23 +14,46 @@
       </div>
     </div>
 
+
   <br/><br/>
-  <h2>BIENVENUE! Ici c'est notre super site de potins, il est chouette, non ? </h2>
+  <h2>BIENVENUE ! Ici c'est notre super site de potins, il est chouette, non ? </h2>
   <%= link_to "Clique ICI", new_gossip_path %>
+
+
   <div class="card-columns mx-2">
     <% @array_gossip.order([:id]).each do |gossip| %>
-    <% @id = Gossip.where(title: "#{gossip.title}").ids %>
-    <div class="card border-primary mb-2 bg-light">
-      <div class="card-body">
-        <h5 class="card-title"> <%= gossip.user.first_name %></h5>
-        <h4 class="card-text"> <%= link_to "#{gossip.title}", gossip_path(@id) %></h4>
-        <% if gossip.comments.count  < 2 %>
-        <h6 class="card-text"> <%= gossip.comments.count %> Comment</h6>
-      <% else %>
-        <h6 class="card-text"> <%= gossip.comments.count %> Comments</h6>
-        <% end %>
-      </div>
-    </div>
+      <% @id = Gossip.where(title: "#{gossip.title}").ids %>
+      <div class="card border-primary mb-2 bg-light">
+        <div class="card-body">
+
+              <% if current_user != nil %>
+               <%= button_to url_for(:controller => "likes", :action => "create"), method: 'post' do %>
+                   <input id="gossip" name="gossip" type="hidden" value="<%= gossip.id %>" />
+                      <a>Like</a>
+                <% end %>
+                  <h6 class="card-text"> <%= Like.where(gossip_id: "#{gossip.id}").count %> Like</h6>
+              <% end %>
+
+
+
+
+
+          <h5 class="card-title"> <%= gossip.user.first_name %></h5>
+          <h4 class="card-text"> <%= link_to "#{gossip.title}", gossip_path(@id) %></h4>
+            <% if gossip.comments.count  < 2 %>
+            <h6 class="card-text"> <%= gossip.comments.count %> Comment </h6>
+            <% else %>
+            <h6 class="card-text"> <%= gossip.comments.count %> Comments</h6>
+            <% end %>
+        </div>
+     </div>
+
+
+
+
+
     <% end %>
+
   </div>
+
 </center>

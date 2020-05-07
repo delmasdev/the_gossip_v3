@@ -16,9 +16,10 @@ class UsersController < ApplicationController
                       'first_name' => params[:first_name],
                       'last_name' => params[:last_name],
                       'age' => params[:age],
-                      'city_id' => params[:city_id],
+                      'city_id' => rand(1..10),
                       'description' => params[:description])
     if @user.save
+      log_in(@user)
       @array_user = User.all
       flash.now[:success] = ""
       redirect_to gossips_path
@@ -27,7 +28,11 @@ class UsersController < ApplicationController
     end
   end
 
+private
 
+  def user_params
+    params.require(:user).permit(:first_name, :last_name, :email, :password)
+  end
 
 
 end
