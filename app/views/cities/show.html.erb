@@ -1,0 +1,16 @@
+<h1><%= @array_city.name %></h1>
+<p>Find me in app/views/cities/show.html.erb</p>
+
+
+
+  <div class="card-columns mx-2">
+    <% @array_gossip.each do |gossip| %>
+    <% @id = Gossip.where(title: "#{gossip.title}").ids%>
+    <div class="card border-primary mb-2 bg-light">
+      <div class="card-body">
+        <h5 class="card-title"> <%= gossip.user.first_name%></h5>
+        <h4 class="card-text"> <%= link_to "#{gossip.title}", gossip_path(@id)%></h4>
+      </div>
+    </div>
+  <% end %>
+  </div>

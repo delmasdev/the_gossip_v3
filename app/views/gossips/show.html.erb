@@ -1,0 +1,70 @@
+<html>
+  <body>
+    <h1>Gossips#show</h1>
+<p>Find me in app/views/gossips/show.html.erb</p>
+<center>
+  <div class="container">
+      <div class="row">
+        <div class="col">
+        <% flash.each do |type, msg| %>
+  <div class="alert alert-info">
+    <%= msg %>
+    edité
+  </div>
+<% end %>
+      </div>
+      </div>
+    </div>
+
+<br>
+<h1>Page du Gossip de <%="#{@array_gossip.user.first_name}"%></h1>
+<h1>Page du Gossip de <%="#{@array_gossip.id}"%></h1>
+<br>
+
+<p>
+  <u>Écrit par</u>: <%= link_to "#{@array_gossip.user.first_name}", user_path(@array_gossip.user.first_name) %> <br>
+  <u>Titre du gossip</u>: <%= @array_gossip.title %><br>
+    <u>Gossip</u>: <%= @array_gossip.content %><br>
+    <u>Date de création</u>: <%= @array_gossip.created_at %><br>
+    <u>Ville</u>: <%= link_to "#{City.find(@array_gossip.user.city_id).name}", city_path(City.find(@array_gossip.user.city_id)) %><br>
+</p>
+
+<p>
+
+  <a href="<%= edit_gossip_path %>" class="btn btn-primary">Edit</a>
+
+   <a href="<%= gossip_path %>" class="btn btn-danger" data-method="DELETE">Delete</a>
+
+
+<p>
+  <%= link_to "Retour à la page des gossips", gossips_path %>
+</p>
+
+
+
+<% Comment.where(gossip_id: @array_gossip.id).each do |c| %>
+<u>Commentaire de <%= c.user.first_name%> :</u>: <%= c.content%> <%= link_to "edit", edit_comment_path(c.id) %><br>
+<% end %>
+
+
+
+<%= form_tag url_for(:controller => "comments", :action => "create"), method: 'post' do %>
+
+<input id="gossip" name="gossip" type="hidden" value="<%=@array_gossip.id%>" />
+
+  <%= label_tag 'Confirme ton profil'%>
+        <%= select_tag 'user', options_from_collection_for_select(User.all, :id, :first_name), {class: 'form-control', prompt: 'Choisir un utilisateur'} %>
+      <br /> <br />
+  <br /> <br />
+
+  <%= label_tag 'Content' %>
+  <%= text_area_tag 'content'%>
+  <br /> <br />
+
+  <%= submit_tag "Create Gossip" %>
+  <% end %>
+
+</center>
+
+  </body>
+</html>

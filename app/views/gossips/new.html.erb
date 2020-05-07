@@ -1,0 +1,37 @@
+<html>
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="col">
+        <% if @gossip.errors.any? %>
+        <% @gossip.errors.full_messages.each do |message| %>
+          <div class="alert alert-primary" role="alert">
+            <%= message %>
+          </div>
+          <% end %>
+        <% end %>
+      </div>
+      </div>
+    </div>
+
+
+
+  <%= form_tag url_for(action: 'create'), method: "post" do %>
+
+
+  <%= label_tag 'Title' %>
+  <%= text_field_tag 'title'%>
+  <br /> <br />
+
+  <%= label_tag 'Content' %>
+  <%= text_area_tag 'content'%>
+  <br /> <br />
+
+  <%= submit_tag "Create Gossip" %>
+<% end %>
+
+
+
+  </body>
+</html>

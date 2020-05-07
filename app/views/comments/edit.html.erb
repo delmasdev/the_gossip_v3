@@ -1,0 +1,41 @@
+
+
+<html>
+  <body>
+    <h1>Editer</h1>
+<div class="container">
+
+      <div class="row">
+        <div class="col">
+        <% if @comment.errors.any? %>
+        <% @comment.errors.full_messages.each do |message| %>
+          <div class="alert alert-warning" role="alert">
+            freferfref
+          </div>
+          <% end %>
+        <% end %>
+      </div>
+      </div>
+    </div>
+
+
+<%= form_for @comment do |message| %>
+
+  <div class="form_group">
+
+  <div class="form_group">
+    <label>Content</label><br>
+    <%= message.text_area :content, class: 'form-control' %>
+  </div>
+<br><br>
+   <div class="form_group">
+    <button type="submit" class="btn btn-primary">Modifier</button>
+  </div>
+
+<% end %>
+
+
+   <a href="<%= comment_path %>" class="btn btn-danger" data-method="DELETE">Delete</a>
+
+  </body>
+</html>

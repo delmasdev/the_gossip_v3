@@ -1,0 +1,36 @@
+<h1>Gossips#index</h1>
+<p>Find me in app/views/gossips/index.html.erb</p>
+<center>
+   <div class="container">
+      <div class="row">
+        <div class="col">
+        <% flash.each do |type, msg| %>
+  <div class="alert alert-info">
+    <%= msg %>
+    <h2>potins, il est chouette, non ? </h2>
+  </div>
+<% end %>
+      </div>
+      </div>
+    </div>
+
+  <br/><br/>
+  <h2>BIENVENUE! Ici c'est notre super site de potins, il est chouette, non ? </h2>
+  <%= link_to "Clique ICI", new_gossip_path %>
+  <div class="card-columns mx-2">
+    <% @array_gossip.order([:id]).each do |gossip| %>
+    <% @id = Gossip.where(title: "#{gossip.title}").ids %>
+    <div class="card border-primary mb-2 bg-light">
+      <div class="card-body">
+        <h5 class="card-title"> <%= gossip.user.first_name %></h5>
+        <h4 class="card-text"> <%= link_to "#{gossip.title}", gossip_path(@id) %></h4>
+        <% if gossip.comments.count  < 2 %>
+        <h6 class="card-text"> <%= gossip.comments.count %> Comment</h6>
+      <% else %>
+        <h6 class="card-text"> <%= gossip.comments.count %> Comments</h6>
+        <% end %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</center>
