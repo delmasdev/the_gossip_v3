@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
 
+  skip_before_action :verify_authenticity_token
+
   def show
     @id = User.where("first_name LIKE ?", "%#{params[:id]}").ids
     @id = @id.join

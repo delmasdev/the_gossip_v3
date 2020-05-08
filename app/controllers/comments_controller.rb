@@ -1,15 +1,18 @@
 class CommentsController < ApplicationController
 
+  before_action :authenticate_user, only: [:edit]
+  skip_before_action :verify_authenticity_token
+
   def create
     @comment = Comment.new(gossip_id: params[:gossip],
                           content: params[:content],
                           'user_id' => session[:user_id])
     if @comment.save
       flash[:success] = "yes"
-      redirect_to gossip_path(@comment.gossip.id)
+      redirect_to(request.env["HTTP_REFERER"])
     else
       flash[:error] = "no"
-     redirect_to gossip_path(@comment.gossip.id)
+     redirect_to(request.env["HTTP_REFERER"])
    end
   end
 
@@ -36,6 +39,15 @@ class CommentsController < ApplicationController
 
     redirect_to gossip_path(@comment.gossip.id)
 
+  end
+
+  private
+
+  def authenticate_user
+    unless current_user
+      flash[:danger] = "Please log in."
+      redirect_to new_session_path
+    end
   end
 
 end

@@ -1,104 +1,106 @@
 <html>
   <body>
-    <h1>Gossips#show</h1>
-<p>Find me in app/views/gossips/show.html.erb</p>
-<center>
 
-
-<div class="container">
-      <div class="row">
-        <div class="col">
-<% [:error].each do |key| %>
-
-  <% if flash[:error] %>
-  <div class="alert alert-info">
-  <div class="<%= key %>" id="flash">
-    commentaire refusé
-    <%= flash[:error] %>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <% [:error].each do |key| %>
+          <% if flash[:error] %>
+            <div class="alert alert-info">
+              <div class="<%= key %>" id="flash">
+                commentaire refusé
+                <%= flash[:error] %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+       </div>
+    </div>
   </div>
-  <% end %>
-<% end %>
-</div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <% [:success].each do |key| %>
+          <% if flash[:success] %>
+            <div class="alert alert-info">
+              <div class="<%= key %>" id="flash">
+                potin édité
+                <%= flash[:success] %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
       </div>
     </div>
-
-    <div class="container">
-      <div class="row">
-        <div class="col">
-<% [:success].each do |key| %>
-
-  <% if flash[:success] %>
-  <div class="alert alert-info">
-  <div class="<%= key %>" id="flash">
-    potin édité
-    <%= flash[:success] %>
   </div>
-  <% end %>
-<% end %>
-</div>
-      </div>
-    </div>
 
 
-<br>
-<h1>Page du Gossip de <%="#{@array_gossip.user.first_name}"%></h1>
-<h1>Page du Gossip de <%="#{@array_gossip.id}"%></h1>
-<br>
+  <div class="container mt-5">
 
-<p>
-  <u>Écrit par</u>: <%= link_to "#{@array_gossip.user.first_name}", user_path(@array_gossip.user.first_name) %> <br>
-  <u>Titre du gossip</u>: <%= @array_gossip.title %><br>
-    <u>Gossip</u>: <%= @array_gossip.content %><br>
-    <u>Date de création</u>: <%= @array_gossip.created_at %><br>
-    <u>Ville</u>: <%= link_to "#{City.find(@array_gossip.user.city_id).name}", city_path(City.find(@array_gossip.user.city_id)) %><br>
-</p>
+    <h1 class="text-primary">Gossip de <%="#{@array_gossip.user.first_name}"%></h1>
 
-<p>
+      <p>
+        <u>Écrit par</u>: <%= link_to "#{@array_gossip.user.first_name}", user_path(@array_gossip.user.first_name) %> <br>
+        <u>Titre du gossip</u>: <%= @array_gossip.title %><br>
+        <u>Gossip</u>: <%= @array_gossip.content %><br>
+        <u>Date de création</u>: <%= @array_gossip.created_at %><br>
+        <u>Ville</u>: <%= link_to "#{City.find(@array_gossip.user.city_id).name}", city_path(City.find(@array_gossip.user.city_id)) %><br>
+      </p>
 
-  <% if current_user == @array_gossip.user %>
-  <a href="<%= edit_gossip_path %>" class="btn btn-primary">Edit</a>
-
-   <a href="<%= gossip_path %>" class="btn btn-danger" data-method="DELETE">Delete</a>
-
-
-   <% end %>
-
-
-<p>
-  <%= link_to "Retour à la page des gossips", gossips_path %>
-</p>
-
-
-
-<% Comment.where(gossip_id: @array_gossip.id).each do |c| %>
-<u>Commentaire de <%= c.user.first_name%> :</u>: <%= c.content%> <%= link_to "edit", edit_comment_path(c.id) %><br>
-<% end %>
+      <p>
+        <% if current_user == @array_gossip.user %>
+          <a href="<%= edit_gossip_path %>" class="btn btn-primary">Edit</a>
+          <a href="<%= gossip_path %>" class="btn btn-danger" data-method="DELETE">Delete</a>
+        <% end %>
+      </p>
 
 
 <% if current_user != nil %>
-<%= form_tag url_for(:controller => "comments", :action => "create"), method: 'post' do %>
+      <div class="container mb-2">
+        <form action="likes/create" method="post" >
+          <input id="gossip" name="gossip" type="hidden" value="<%=@array_gossip.id%>" />
+          <button type="submit" class="btn btn-primary"><%= Like.where(gossip_id: @array_gossip.id).count %> Like</button>
+        </form>
+      </div>
 
-<input id="gossip" name="gossip" type="hidden" value="<%=@array_gossip.id%>" />
 
-  <br /> <br />
+      <div class="row bootstrap snippets">
+        <div class="col-md-6 col-md-offset-2 col-sm-12">
+          <div class="comment-wrapper">
+            <div class="panel panel-info">
 
-  <%= label_tag 'Content' %>
-  <%= text_area_tag 'content'%>
-  <br /> <br />
-
-  <%= submit_tag "Create Gossip" %>
-  <% end %>
-  <%= button_to url_for(:controller => "likes", :action => "create"), method: 'post' do %>
-  <input id="gossip" name="gossip" type="hidden" value="<%=@array_gossip.id%>" />
-              <a>Like</a>
-          <% end %>
-              <h6 class="card-text"> <%= Like.where(gossip_id: @array_gossip.id).count %> Like</h6>
-            </div>
+                <div class="panel-body">
+                  <form action="comments/create" method="post" >
+                    <input id="gossip" name="gossip" type="hidden" value="<%=@array_gossip.id%>" />
+                    <textarea class="form-control" placeholder="write a comment..." rows="3" name=content></textarea>
+                    <br>
+                    <button type="submit" class="btn btn-info pull-right">Post</button>
+                  </form>
+                    <div class="clearfix"></div>
+                    <hr>
+                    <% Comment.where(gossip_id: @array_gossip.id).each do |c| %>
+                      <ul class="media-list">
+                        <li class="media">
+                          <a href="#" class="pull-left">
+                            <img src="https://bootdey.com/img/Content/user_1.jpg" alt="" class="img-circle">
+                          </a>
+                          <div class="media-body">
+                            <strong class="text-success"><%= c.user.first_name%> </strong>
+                            <p>
+                              <%= c.content %>
+                              <%= link_to "Modifie ton comment", edit_comment_path(c.id) %>
+                            </p>
+                          </div>
+                        </li>
+                      </ul>
+                    <% end %>
+                </div>
+              </div>
           </div>
-
 <% end %>
-
-</center>
-
+        </div>
+      </div>
+  </div>
   </body>
 </html>
